@@ -1,0 +1,121 @@
+<div class="search-container">
+    <input
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearchChange()"
+      type="text"
+      placeholder="Введите наименование для поиска"
+      class="search-input"
+    />
+    <button (click)="searchEquip()" class="btn search-btn">Искать</button>
+</div>
+
+<button (click)="onAddEquip()" class="btn add-btn">Добавить технику</button>
+
+<form *ngIf="equipToAdd" class="confirm-dialog"
+[formGroup]="formAdd"
+(ngSubmit)="onAddSubmit()">
+    <p>Добавить новую технику:</p>
+    <label>
+      Наименование:
+      <input
+        formControlName="name"
+        type="text"
+        placeholder="Введите наименование"
+        required
+      />
+    </label>
+    <div *ngIf="formAdd.controls.name?.touched && formAdd.controls.name?.invalid">
+      <small *ngIf="formAdd.controls.name?.hasError('required')">Наименование обязательно для заполнения.</small>
+    </div>
+    <br />
+    <label>
+      Тип:
+      <input
+        formControlName="type"
+        type="text"
+        placeholder="Введите тип"
+        required
+      />
+    </label>
+    <div *ngIf="formAdd.controls.type?.touched && formAdd.controls.type?.invalid">
+      <small *ngIf="formAdd.controls.type?.hasError('required')">Тип обязателен для заполнения.</small>
+    </div>
+    <br />
+    <button class="btn confirm-btn" type="submit">Добавить</button>
+    <button (click)="onAddCancel()" class="btn cancel-btn" type="reset">Отмена</button>
+</form>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th>Инв №</th>
+        <th>Наименование</th>
+        <th>Тип</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let equip of displayedEquips">
+            <td>{{ equip.id }}</td>
+            <td>{{ equip.name }}</td>
+            <td>{{ equip.type }}</td>
+            <td>
+                <button (click)="onEditEquip(equip)" class="btn edit-btn">
+                    <img src="/assets/icons/edit-icon.png" alt="Ред." class="icon" />
+                </button>
+                <button (click)="onDeleteEquip(equip)" class="btn delete-btn">
+                    <img src="/assets/icons/delete-icon.png" alt="Удалить" class="icon" />
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<form *ngIf="equipToEdit" class="form"
+[formGroup]="formEdit"
+(ngSubmit)="onEditSubmit()"
+>
+    <p>Редактирование техники:</p>
+    <label>
+      Наименование:
+      <input
+        formControlName="name"
+        type="text"
+        [(ngModel)]="editedEquip.name"
+        required
+        placeholder="Введите наименование"
+      />
+    </label>
+    <div *ngIf="formEdit.controls.name?.touched && formEdit.controls.name?.invalid">
+        <small *ngIf="formEdit.controls.name?.hasError('required')">Наименование обязательно для заполнения.</small>
+    </div>
+    <br />
+    <label>
+      Тип:
+      <input
+          formControlName="type"
+          type="text"
+          [(ngModel)]="editedEquip.type"
+          required
+          placeholder="Введите тип"
+      />
+    </label>
+    <div *ngIf="formEdit.controls.type?.touched && formEdit.controls.type?.invalid">
+        <small *ngIf="formEdit.controls.type?.hasError('required')">Тип обязателен для заполнения.</small>
+    </div>
+    <br />
+    <button class="btn confirm-btn" type="submit">Сохранить</button>
+    <button (click)="onEditCancel()" class="btn cancel-btn">Отмена</button>
+</form>
+
+<form *ngIf="equipToDelete" class="form">
+    <p>Вы уверены, что хотите удалить технику <strong>{{ equipToDelete.name }}</strong>?</p>
+    <button (click)="onDeleteSubmit()" class="btn confirm-btn">Удалить</button>
+    <button (click)="onDeleteCancel()" class="btn cancel-btn">Отмена</button>
+</form>
+
+<div class="pagination">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">Назад</button>
+    <span>Страница {{ currentPage }} из {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Вперед</button>
+</div>

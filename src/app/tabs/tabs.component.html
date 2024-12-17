@@ -1,0 +1,12 @@
+<nav class="navbar">
+  <ul class="nav-list">
+    <li><a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Сотрудники</a></li>
+    <li><a routerLink="/equipment" routerLinkActive="active-link">Техника</a></li>
+    <li><a routerLink="/equipment-types" routerLinkActive="active-link">Типы техники</a></li>
+    <li><a routerLink="/employee-equip" routerLinkActive="active-link">Техника сотрудников</a></li>
+    <li><a routerLink="/inventory" routerLinkActive="active-link">Инвентаризация</a></li>
+  </ul>
+</nav>
+<div class="content">
+  <router-outlet></router-outlet>
+</div>

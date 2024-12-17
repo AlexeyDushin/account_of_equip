@@ -1,0 +1,92 @@
+<div class="search-container">
+    <input
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearchChange()"
+      type="text"
+      placeholder="Введите тип для поиска"
+      class="search-input"
+    />
+    <button (click)="searchTypes()" class="btn search-btn">Искать</button>
+</div>
+
+<button (click)="onAddType()" class="btn add-btn">Добавить тип техники</button>
+
+<form *ngIf="typeToAdd" class="confirm-dialog"
+[formGroup]="formAdd"
+(ngSubmit)="onAddSubmit()">
+    <p>Добавить новый тип техники:</p>
+    <label>
+        Тип:
+        <input
+          formControlName="type"
+          type="text"
+          placeholder="Введите тип"
+          required
+        />
+      </label>
+      <div *ngIf="formAdd.controls.type?.touched && formAdd.controls.type?.invalid">
+        <small *ngIf="formAdd.controls.type?.hasError('required')">Тип обязателен для заполнения.</small>
+      </div>
+    <br />
+    <button class="btn confirm-btn" type="submit">Добавить</button>
+    <button (click)="onAddCancel()" class="btn cancel-btn" type="reset">Отмена</button>
+</form>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th>№</th>
+        <th>Наименование</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let type of displayedTypes">
+            <td>{{ type.id }}</td>
+            <td>{{ type.type }}</td>
+            <td>
+                <button (click)="onEditType(type)" class="btn edit-btn">
+                    <img src="/assets/icons/edit-icon.png" alt="Ред." class="icon" />
+                </button>
+                <button (click)="onDeleteType(type)" class="btn delete-btn">
+                    <img src="/assets/icons/delete-icon.png" alt="Удалить" class="icon" />
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<form *ngIf="typeToEdit" class="form"
+[formGroup]="formEdit"
+(ngSubmit)="onEditSubmit()"
+>
+    <p>Редактирование техники:</p>
+    <label>
+        Тип:
+        <input
+            formControlName="type"
+            type="text"
+            [(ngModel)]="editedType.type"
+            required
+            placeholder="Введите тип"
+        />
+    </label>
+    <div *ngIf="formEdit.controls.type?.touched && formEdit.controls.type?.invalid">
+        <small *ngIf="formEdit.controls.type?.hasError('required')">Тип обязателен для заполнения.</small>
+    </div>
+    <br />
+    <button class="btn confirm-btn" type="submit">Сохранить</button>
+    <button (click)="onEditCancel()" class="btn cancel-btn">Отмена</button>
+</form>
+
+<form *ngIf="typeToDelete" class="form">
+    <p>Вы уверены, что хотите удалить технику <strong>{{ typeToDelete.type }}</strong>?</p>
+    <button (click)="onDeleteSubmit()" class="btn confirm-btn">Удалить</button>
+    <button (click)="onDeleteCancel()" class="btn cancel-btn">Отмена</button>
+</form>
+
+<div class="pagination">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">Назад</button>
+    <span>Страница {{ currentPage }} из {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Вперед</button>
+</div>

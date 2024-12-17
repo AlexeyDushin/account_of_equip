@@ -1,0 +1,114 @@
+<div class="search-container">
+    <input
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearchChange()"
+      type="text"
+      placeholder="Введите имя для поиска"
+      class="search-input"
+    />
+    <button (click)="searchEmployee()" class="btn search-btn">Искать</button>
+</div>
+
+<button (click)="onAddEmployee()" class="btn add-btn">Добавить сотрудника</button>
+
+<form *ngIf="employeeToAdd" class="confirm-dialog"
+[formGroup]="formAdd"
+(ngSubmit)="onAddSubmit()">
+    <p>Добавить нового сотрудника:</p>
+    <label>
+      Имя:
+      <input formControlName="name" type="text" placeholder="Введите имя" required />
+    </label>
+    <div *ngIf="formAdd.controls.name?.touched && formAdd.controls.name?.invalid">
+      <small *ngIf="formAdd.controls.name?.hasError('required')">Имя обязательно для заполнения.</small>
+    </div>
+    <br />
+    <label>
+      Кабинет:
+      <input formControlName="office" type="number" placeholder="Введите кабинет" required min="1" />
+    </label>
+    <div *ngIf="formAdd.controls.office?.touched && formAdd.controls.office?.invalid">
+      <small *ngIf="formAdd.controls.office?.hasError('required')">Кабинет обязателен для заполнения.</small>
+      <small *ngIf="formAdd.controls.office?.hasError('min')">Номер кабинета должен быть больше 0.</small>
+    </div>
+    <br />
+    <button class="btn confirm-btn" type="submit">Добавить</button>
+    <button (click)="onAddCancel()" class="btn cancel-btn" type="reset">Отмена</button>
+</form>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th>Таб №</th>
+        <th>ФИО</th>
+        <th>Кабинет</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let emplo of displayedemployees">
+            <td>{{ emplo.id }}</td>
+            <td>{{ emplo.name }}</td>
+            <td>{{ emplo.office }}</td>
+            <td>
+                <button (click)="onEditEmployee(emplo)" class="btn edit-btn">
+                    <img src="/assets/icons/edit-icon.png" alt="Ред." class="icon" />
+                </button>
+                <button (click)="onDeleteEmployee(emplo)" class="btn delete-btn">
+                    <img src="/assets/icons/delete-icon.png" alt="Удалить" class="icon" />
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<form *ngIf="employeeToEdit" class="form"
+[formGroup]="formEdit"
+(ngSubmit)="onEditSubmit()"
+>
+    <p>Редактирование сотрудника:</p>
+    <label>
+      ФИО:
+      <input
+        formControlName="name"
+        type="text"
+        [(ngModel)]="editedEmployee.name"
+        required
+        placeholder="Введите имя"
+      />
+    </label>
+    <div *ngIf="formEdit.controls.name?.touched && formEdit.controls.name?.invalid">
+      <small *ngIf="formEdit.controls.name?.hasError('required')">ФИО обязательно для заполнения.</small>
+    </div>
+    <br />
+    <label>
+      Кабинет:
+      <input
+        formControlName="office"
+        type="number"
+        [(ngModel)]="editedEmployee.office"
+        required
+        min="1"
+        placeholder="Введите кабинет"
+      />
+    </label>
+    <div *ngIf="formEdit.controls.office?.touched && formEdit.controls.office?.invalid">
+      <small *ngIf="formEdit.controls.office?.hasError('required')">Кабинет обязателен для заполнения.</small>
+      <small *ngIf="formEdit.controls.office?.hasError('min')">Номер кабинета должен быть больше 0.</small>
+    </div>
+    <br />
+    <button class="btn confirm-btn" type="submit">Сохранить</button>
+    <button (click)="onEditCancel()" class="btn cancel-btn">Отмена</button>
+</form>
+
+<form *ngIf="employeeToDelete" class="form">
+    <p>Вы уверены, что хотите удалить сотрудника <strong>{{ employeeToDelete.name }}</strong>?</p>
+    <button (click)="onDeleteSubmit()" class="btn confirm-btn">Удалить</button>
+    <button (click)="onDeleteCancel()" class="btn cancel-btn">Отмена</button>
+</form>
+
+<div class="pagination">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">Назад</button>
+    <span>Страница {{ currentPage }} из {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Вперед</button>
+</div>

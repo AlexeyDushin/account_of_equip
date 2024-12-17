@@ -1,0 +1,9 @@
+<div>
+    <label for="cabinet">Выберите кабинет:</label>
+    <select id="cabinet" [(ngModel)]="selectedCabinet">
+      <option *ngFor="let cabinet of cabinets" [value]="cabinet">{{ cabinet }}</option>
+    </select>
+  </div>
+  
+  <button (click)="createReport()">Создать отчёт</button>
+  
