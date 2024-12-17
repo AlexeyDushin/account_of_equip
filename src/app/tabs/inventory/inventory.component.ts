@@ -76,7 +76,7 @@ export class InventoryComponent implements OnInit {
         <tr>
           <td>${index + 1}</td>
           <td>${item.nameEmployee}</td>
-          <td>${item.officeEmployee}</td>
+          <td>${item.idEmployee}</td>
           <td>${item.typeName}</td>
           <td>${item.nameEquip}</td>
           <td>${item.idEquip}</td>
