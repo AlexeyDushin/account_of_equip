@@ -8,7 +8,7 @@ import { EmployeeService, Employee } from '../../services/employee.service';
   selector: 'app-employee',
   imports: [NgFor, NgIf, FormsModule, ReactiveFormsModule],
   templateUrl: './employee.component.html',
-  styleUrl: './employee.component.scss'
+  styleUrl: './employee.component.scss',
 })
 export class EmployeeComponent implements OnInit {
 

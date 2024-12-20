@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { EmployeeService } from '../../services/employee.service';
-import { InventoryService, InventoryItem } from '../../services/inventory.service';  
+import { InventoryService, InventoryItem } from '../../services/inventory.service';
+import { InventoryModalComponent } from './inventory-modal/inventory-modal.component';
 
 @Component({
   selector: 'app-inventory',
@@ -18,7 +20,8 @@ export class InventoryComponent implements OnInit {
 
   constructor(
     private employeeService: EmployeeService,
-    private inventoryService: InventoryService  
+    private inventoryService: InventoryService,  
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -44,7 +47,7 @@ export class InventoryComponent implements OnInit {
     this.inventoryService.getInventoryByOffice(this.selectedCabinet).subscribe({
       next: (data) => {
         this.inventory = data;
-        this.generateReport();
+        this.openReportModal(this.generateReport());
       },
       error: (err) => {
         console.error('Ошибка при загрузке инвентаризации:', err);
@@ -52,7 +55,7 @@ export class InventoryComponent implements OnInit {
     });
   }
 
-  generateReport(): void {
+  generateReport(): string {
     const today = new Date();
     const formattedDate = today.toLocaleDateString('ru-RU');
 
@@ -86,28 +89,15 @@ export class InventoryComponent implements OnInit {
 
     tableContent += '</tbody></table>';
 
-    const reportContent = `
-      <html>
-        <head>
-          <title>Инвентаризационная опись</title>
-          <style>
-            table { width: 100%; }
-            th, td { padding: 10px; text-align: left; }
-            th { background-color: #f2f2f2; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
-          </style>
-        </head>
-        <body>
-          <h1>Инвентаризационная опись кабинета №${this.selectedCabinet} на ${formattedDate}</h1>
-          ${tableContent}
-        </body>
-      </html>
+    return `
+      <p>Инвентаризационная опись кабинета №${this.selectedCabinet} на ${formattedDate}</p>
+      ${tableContent}
     `;
-
-    const newWindow = window.open('', '_blank');
-    if (newWindow) {
-      newWindow.document.write(reportContent);
-      newWindow.document.close();
-    }
+  }
+  openReportModal(reportContent: string): void {
+    this.dialog.open(InventoryModalComponent, {
+      data: reportContent,
+      panelClass: 'custom-dialog-container' 
+    });
   }
 }

@@ -5,7 +5,7 @@ import { RouterOutlet, RouterLink, RouterModule } from '@angular/router';
   selector: 'app-tabs',
   imports: [RouterOutlet, RouterLink, RouterModule],
   templateUrl: './tabs.component.html',
-  styleUrl: './tabs.component.scss'
+  styleUrl: './tabs.component.scss',
 })
 export class TabsComponent {
 
